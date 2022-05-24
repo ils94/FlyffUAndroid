@@ -59,12 +59,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        WebSettings webSettingsStream = webView.getSettings();
-        webSettingsStream.setJavaScriptEnabled(true);
-        webSettingsStream.setDomStorageEnabled(true);
-        webSettingsStream.setJavaScriptCanOpenWindowsAutomatically(false);
-        webSettingsStream.setUseWideViewPort(true);
-        webSettingsStream.setLoadWithOverviewMode(true);
+        WebSettings webSettings = webView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+        webSettings.setDomStorageEnabled(true);
+        webSettings.setJavaScriptCanOpenWindowsAutomatically(false);
+        webSettings.setUseWideViewPort(true);
+        webSettings.setLoadWithOverviewMode(true);
+        webSettings.setUserAgentString("FlyffU WebViewClient");
 
         webView.loadUrl(url);
     }
