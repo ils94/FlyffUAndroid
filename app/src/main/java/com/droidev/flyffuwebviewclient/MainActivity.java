@@ -46,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT));
 
+        webView.requestFocusFromTouch();
+
         linearLayout.addView(webView);
 
         webView.setWebViewClient(new WebViewClient() {
