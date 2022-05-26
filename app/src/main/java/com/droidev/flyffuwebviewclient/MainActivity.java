@@ -1,5 +1,6 @@
 package com.droidev.flyffuwebviewclient;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
@@ -13,19 +14,17 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Toast;
-
-import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
     WebView mClientWebView, sClientWebView;
     FrameLayout mClient, sClient;
     LinearLayout linearLayout;
-    Boolean exit = false;
+    Boolean exit = false, isOpen = false;
 
     Menu optionMenu;
 
@@ -83,23 +82,79 @@ public class MainActivity extends AppCompatActivity {
 
             case R.id.secondClient:
 
-                if (sClient.getVisibility() == View.GONE) {
+                if (sClient.getVisibility() == View.GONE && !isOpen) {
 
                     sClient.setVisibility(View.VISIBLE);
 
                     secondClient();
 
                     optionMenu.findItem(R.id.secondClient).setTitle("Close Second Client");
+
+                    optionMenu.findItem(R.id.minimizeSecondClient).setEnabled(true);
+
+                    optionMenu.findItem(R.id.reloadSecondClient).setEnabled(true);
+
+                    isOpen = true;
                 } else {
 
-                    sClient.removeAllViews();
+                    AlertDialog dialog = new AlertDialog.Builder(this)
+                            .setCancelable(false)
+                            .setTitle("Are you sure you want to close the second client?")
+                            .setPositiveButton("Yes", null)
+                            .setNegativeButton("No", null)
+                            .show();
 
-                    sClientWebView.loadUrl("about:blank");
+                    Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+
+                    positiveButton.setOnClickListener(v -> {
+
+                        sClient.removeAllViews();
+
+                        sClientWebView.loadUrl("about:blank");
+
+                        sClient.setVisibility(View.GONE);
+
+                        optionMenu.findItem(R.id.secondClient).setTitle("Open Second Client");
+
+                        optionMenu.findItem(R.id.minimizeSecondClient).setTitle("Minimize Second Client");
+
+                        optionMenu.findItem(R.id.minimizeSecondClient).setEnabled(false);
+
+                        optionMenu.findItem(R.id.reloadSecondClient).setEnabled(false);
+
+                        isOpen = false;
+
+                        dialog.dismiss();
+                    });
+                }
+
+                break;
+
+            case R.id.minimizeSecondClient:
+
+                if (sClient.getVisibility() == View.VISIBLE) {
 
                     sClient.setVisibility(View.GONE);
 
-                    optionMenu.findItem(R.id.secondClient).setTitle("Open Second Client");
+                    optionMenu.findItem(R.id.minimizeSecondClient).setTitle("Maximize Second Client");
+                } else {
+
+                    sClient.setVisibility(View.VISIBLE);
+
+                    optionMenu.findItem(R.id.minimizeSecondClient).setTitle("Minimize Second Client");
                 }
+
+                break;
+
+            case R.id.reloadMainClient:
+
+                mClientWebView.reload();
+
+                break;
+
+            case R.id.reloadSecondClient:
+
+                sClientWebView.reload();
 
                 break;
 
@@ -171,17 +226,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         frameLayout.addView(webView);
-
-        webView.setWebViewClient(new WebViewClient() {
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-
-                if (url.equals(url)) {
-                    view.loadUrl(url);
-                }
-
-                return true;
-            }
-        });
 
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
