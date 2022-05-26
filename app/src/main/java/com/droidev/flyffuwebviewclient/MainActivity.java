@@ -92,6 +92,8 @@ public class MainActivity extends AppCompatActivity {
 
                     optionMenu.findItem(R.id.minimizeSecondClient).setEnabled(true);
 
+                    optionMenu.findItem(R.id.minimizeMainClient).setEnabled(true);
+
                     optionMenu.findItem(R.id.reloadSecondClient).setEnabled(true);
 
                     isOpen = true;
@@ -118,9 +120,18 @@ public class MainActivity extends AppCompatActivity {
 
                         optionMenu.findItem(R.id.minimizeSecondClient).setTitle("Minimize Second Client");
 
+                        optionMenu.findItem(R.id.minimizeMainClient).setTitle("Minimize Main Client");
+
                         optionMenu.findItem(R.id.minimizeSecondClient).setEnabled(false);
 
+                        optionMenu.findItem(R.id.minimizeMainClient).setEnabled(false);
+
                         optionMenu.findItem(R.id.reloadSecondClient).setEnabled(false);
+
+                        if (mClient.getVisibility() == View.GONE) {
+
+                            mClient.setVisibility(View.VISIBLE);
+                        }
 
                         isOpen = false;
 
@@ -137,11 +148,35 @@ public class MainActivity extends AppCompatActivity {
                     sClient.setVisibility(View.GONE);
 
                     optionMenu.findItem(R.id.minimizeSecondClient).setTitle("Maximize Second Client");
+
+                    optionMenu.findItem(R.id.minimizeMainClient).setEnabled(false);
                 } else {
 
                     sClient.setVisibility(View.VISIBLE);
 
                     optionMenu.findItem(R.id.minimizeSecondClient).setTitle("Minimize Second Client");
+
+                    optionMenu.findItem(R.id.minimizeMainClient).setEnabled(true);
+                }
+
+                break;
+
+            case R.id.minimizeMainClient:
+
+                if (mClient.getVisibility() == View.VISIBLE) {
+
+                    mClient.setVisibility(View.GONE);
+
+                    optionMenu.findItem(R.id.minimizeMainClient).setTitle("Maximize Main Client");
+
+                    optionMenu.findItem(R.id.minimizeSecondClient).setEnabled(false);
+                } else {
+
+                    mClient.setVisibility(View.VISIBLE);
+
+                    optionMenu.findItem(R.id.minimizeMainClient).setTitle("Minimize Main Client");
+
+                    optionMenu.findItem(R.id.minimizeSecondClient).setEnabled(true);
                 }
 
                 break;
