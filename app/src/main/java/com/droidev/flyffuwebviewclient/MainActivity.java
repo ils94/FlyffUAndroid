@@ -1,9 +1,12 @@
 package com.droidev.flyffuwebviewclient;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
@@ -19,12 +22,17 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import java.util.Objects;
+
 public class MainActivity extends AppCompatActivity {
 
     WebView mClientWebView, sClientWebView;
     FrameLayout mClient, sClient;
     LinearLayout linearLayout;
     Boolean exit = false, isOpen = false;
+    TinyDB tinyDB;
+
+    String rotationlock = "unlocked";
 
     Menu optionMenu;
 
@@ -34,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        tinyDB = new TinyDB(this);
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -51,6 +61,11 @@ public class MainActivity extends AppCompatActivity {
         sClientWebView = new WebView(getApplicationContext());
 
         mainClient();
+
+        if (savedInstanceState == null) {
+            mClientWebView.loadUrl(url);
+            sClientWebView.loadUrl(url);
+        }
     }
 
     @Override
@@ -183,19 +198,25 @@ public class MainActivity extends AppCompatActivity {
 
             case R.id.reloadMainClient:
 
-                mClientWebView.reload();
+                mClientWebView.loadUrl(url);
 
                 break;
 
             case R.id.reloadSecondClient:
 
-                sClientWebView.reload();
+                sClientWebView.loadUrl(url);
 
                 break;
 
             case R.id.fullScreen:
 
                 fullScreenOn();
+
+                break;
+
+            case R.id.rotation:
+
+                lockUnlockRotation();
 
                 break;
         }
@@ -207,6 +228,8 @@ public class MainActivity extends AppCompatActivity {
 
         optionMenu = menu;
 
+        loadRotationConfig();
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -214,7 +237,7 @@ public class MainActivity extends AppCompatActivity {
 
         View decorView = getWindow().getDecorView();
 
-        getSupportActionBar().hide();
+        Objects.requireNonNull(getSupportActionBar()).hide();
 
         int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
         decorView.setSystemUiVisibility(uiOptions);
@@ -224,7 +247,7 @@ public class MainActivity extends AppCompatActivity {
 
         View decorView = getWindow().getDecorView();
 
-        getSupportActionBar().show();
+        Objects.requireNonNull(getSupportActionBar()).show();
 
         int uiOptions = View.SYSTEM_UI_FLAG_VISIBLE;
         decorView.setSystemUiVisibility(uiOptions);
@@ -238,6 +261,69 @@ public class MainActivity extends AppCompatActivity {
     private void secondClient() {
 
         createWebViewer(sClientWebView, sClient);
+    }
+
+    private void lockUnlockRotation() {
+
+        if (rotationlock.equals("unlocked")) {
+
+            rotationlock = "locked";
+
+            Toast.makeText(this, "Rotation is locked", Toast.LENGTH_SHORT).show();
+
+            optionMenu.findItem(R.id.rotation).setTitle("Rotation Locked");
+
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
+
+        } else if (rotationlock.equals("locked")) {
+
+            rotationlock = "unlocked";
+
+            Toast.makeText(this, "Rotation is unlocked", Toast.LENGTH_SHORT).show();
+
+            optionMenu.findItem(R.id.rotation).setTitle("Rotation Unlocked");
+
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
+        }
+
+        tinyDB.remove("rotation");
+        tinyDB.putString("rotation", rotationlock);
+    }
+
+    @SuppressLint("SourceLockedOrientationActivity")
+    private void loadRotationConfig() {
+
+        if (!tinyDB.getString("orientation").equals("")) {
+
+            if (tinyDB.getString("orientation").equals("landscape")) {
+
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+
+            } else if (tinyDB.getString("orientation").equals("portrait")) {
+
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                linearLayout.setOrientation(LinearLayout.VERTICAL);
+            }
+        }
+
+        if (!tinyDB.getString("rotation").equals("")) {
+
+            rotationlock = tinyDB.getString("rotation");
+
+            if (rotationlock.equals("locked")) {
+
+                optionMenu.findItem(R.id.rotation).setTitle("Rotation Locked");
+
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
+
+            } else if (rotationlock.equals("unlocked")) {
+
+                optionMenu.findItem(R.id.rotation).setTitle("Rotation Unlocked");
+
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
+            }
+        }
     }
 
     @SuppressLint({"SetJavaScriptEnabled", "ClickableViewAccessibility"})
@@ -271,5 +357,40 @@ public class MainActivity extends AppCompatActivity {
         webSettings.setUserAgentString("FlyffU WebViewClient");
 
         webView.loadUrl(url);
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mClientWebView.saveState(outState);
+        sClientWebView.saveState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mClientWebView.restoreState(savedInstanceState);
+        sClientWebView.saveState(savedInstanceState);
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        tinyDB.remove("orientation");
+
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+
+            tinyDB.putString("orientation", "landscape");
+
+            linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+
+            tinyDB.putString("orientation", "portrait");
+
+            linearLayout.setOrientation(LinearLayout.VERTICAL);
+        }
+
     }
 }
