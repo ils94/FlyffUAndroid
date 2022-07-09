@@ -58,5 +58,6 @@
 
     <item
         android:id="@+id/rotation"
-        android:title="Rotation Unlocked" />
+        android:title="Rotation Locked"
+        tools:ignore="HardcodedText" />
 </menu>

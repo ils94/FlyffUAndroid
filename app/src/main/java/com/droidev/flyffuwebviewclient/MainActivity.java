@@ -22,6 +22,8 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
@@ -29,10 +31,11 @@ public class MainActivity extends AppCompatActivity {
     WebView mClientWebView, sClientWebView;
     FrameLayout mClient, sClient;
     LinearLayout linearLayout;
+    FloatingActionButton floatingActionButton;
     Boolean exit = false, isOpen = false;
     TinyDB tinyDB;
 
-    String rotationlock = "unlocked";
+    String rotationLock = "locked";
 
     Menu optionMenu;
 
@@ -48,8 +51,6 @@ public class MainActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        fullScreenOn();
-
         linearLayout = findViewById(R.id.linearLayout);
 
         mClient = findViewById(R.id.frameLayoutMainClient);
@@ -59,6 +60,37 @@ public class MainActivity extends AppCompatActivity {
         mClientWebView = new WebView(getApplicationContext());
 
         sClientWebView = new WebView(getApplicationContext());
+
+        floatingActionButton = findViewById(R.id.fab);
+
+        floatingActionButton.setOnClickListener(view -> {
+
+            if (sClient.getVisibility() == View.GONE) {
+
+                sClient.setVisibility(View.VISIBLE);
+
+                optionMenu.findItem(R.id.minimizeSecondClient).setTitle("Minimize Second Client");
+
+                optionMenu.findItem(R.id.minimizeSecondClient).setEnabled(true);
+
+                optionMenu.findItem(R.id.minimizeMainClient).setTitle("Minimize Main Client");
+
+                optionMenu.findItem(R.id.minimizeMainClient).setEnabled(true);
+            } else {
+
+                sClient.setVisibility(View.GONE);
+
+                optionMenu.findItem(R.id.minimizeSecondClient).setTitle("Maximize Second Client");
+
+                optionMenu.findItem(R.id.minimizeSecondClient).setEnabled(true);
+
+                optionMenu.findItem(R.id.minimizeMainClient).setTitle("Minimize Main Client");
+
+                optionMenu.findItem(R.id.minimizeMainClient).setEnabled(false);
+
+                mClient.setVisibility(View.VISIBLE);
+            }
+        });
 
         mainClient();
 
@@ -111,6 +143,8 @@ public class MainActivity extends AppCompatActivity {
 
                     optionMenu.findItem(R.id.reloadSecondClient).setEnabled(true);
 
+                    floatingActionButton.setVisibility(View.VISIBLE);
+
                     isOpen = true;
                 } else {
 
@@ -147,6 +181,8 @@ public class MainActivity extends AppCompatActivity {
 
                             mClient.setVisibility(View.VISIBLE);
                         }
+
+                        floatingActionButton.setVisibility(View.GONE);
 
                         isOpen = false;
 
@@ -265,9 +301,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void lockUnlockRotation() {
 
-        if (rotationlock.equals("unlocked")) {
+        if (rotationLock.equals("unlocked")) {
 
-            rotationlock = "locked";
+            rotationLock = "locked";
 
             Toast.makeText(this, "Rotation is locked", Toast.LENGTH_SHORT).show();
 
@@ -275,9 +311,9 @@ public class MainActivity extends AppCompatActivity {
 
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
 
-        } else if (rotationlock.equals("locked")) {
+        } else if (rotationLock.equals("locked")) {
 
-            rotationlock = "unlocked";
+            rotationLock = "unlocked";
 
             Toast.makeText(this, "Rotation is unlocked", Toast.LENGTH_SHORT).show();
 
@@ -287,7 +323,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         tinyDB.remove("rotation");
-        tinyDB.putString("rotation", rotationlock);
+        tinyDB.putString("rotation", rotationLock);
     }
 
     @SuppressLint("SourceLockedOrientationActivity")
@@ -309,20 +345,25 @@ public class MainActivity extends AppCompatActivity {
 
         if (!tinyDB.getString("rotation").equals("")) {
 
-            rotationlock = tinyDB.getString("rotation");
+            rotationLock = tinyDB.getString("rotation");
 
-            if (rotationlock.equals("locked")) {
+            if (rotationLock.equals("locked")) {
 
                 optionMenu.findItem(R.id.rotation).setTitle("Rotation Locked");
 
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
 
-            } else if (rotationlock.equals("unlocked")) {
+            } else if (rotationLock.equals("unlocked")) {
 
                 optionMenu.findItem(R.id.rotation).setTitle("Rotation Unlocked");
 
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
             }
+        } else {
+
+            tinyDB.putString("rotation", "locked");
+
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
         }
     }
 
@@ -358,6 +399,7 @@ public class MainActivity extends AppCompatActivity {
 
         webView.loadUrl(url);
     }
+
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
