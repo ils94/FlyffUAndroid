@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <item
+        android:title="Client"
+        tools:ignore="HardcodedText">
+
+        <menu>
+
+            <item
+                android:id="@+id/secondClient"
+                android:title="Open Second Client"
+                tools:ignore="HardcodedText" />
+
+            <item
+                android:id="@+id/minimizeSecondClient"
+                android:enabled="false"
+                android:title="Minimize Second Client"
+                tools:ignore="HardcodedText" />
+
+            <item
+                android:id="@+id/minimizeMainClient"
+                android:enabled="false"
+                android:title="Minimize Main Client"
+                tools:ignore="HardcodedText" />
+
+        </menu>
+
+    </item>
+
+    <item
+        android:title="Reload..."
+        tools:ignore="HardcodedText">
+
+        <menu>
+
+            <item
+                android:id="@+id/reloadMainClient"
+                android:title="Main Client"
+                tools:ignore="HardcodedText" />
+
+            <item
+                android:id="@+id/reloadSecondClient"
+                android:enabled="false"
+                android:title="Second Client"
+                tools:ignore="HardcodedText" />
+
+        </menu>
+
+    </item>
+
+    <item
+        android:id="@+id/fullScreen"
+        android:title="Go Back to Fullscreen"
+        tools:ignore="HardcodedText" />
+
+    <item
+        android:id="@+id/rotation"
+        android:title="Rotation Locked"
+        tools:ignore="HardcodedText" />
+</menu>
