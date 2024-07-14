@@ -35,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
     Boolean exit = false, isOpen = false;
     TinyDB tinyDB;
 
+    String userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36";
+
     String rotationLock = "locked";
 
     Menu optionMenu;
@@ -332,18 +334,26 @@ public class MainActivity extends AppCompatActivity {
             return false;
         });
 
-        frameLayout.addView(webView);
-
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
         webSettings.setDomStorageEnabled(true);
         webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
         webSettings.setUseWideViewPort(true);
         webSettings.setLoadWithOverviewMode(true);
-        webSettings.setUserAgentString("FlyffU WebViewClient");
+        webSettings.setUserAgentString(userAgent);
+
+        webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+
+        webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+        webSettings.setSupportZoom(true);
+        webSettings.setBuiltInZoomControls(true);
+        webSettings.setDisplayZoomControls(false);
+
+        frameLayout.addView(webView);
 
         webView.loadUrl(url);
     }
+
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
