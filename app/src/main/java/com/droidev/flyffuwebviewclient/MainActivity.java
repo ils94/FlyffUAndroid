@@ -329,7 +329,7 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint("SourceLockedOrientationActivity")
     private void loadRotationConfig() {
 
-        if (!tinyDB.getString("orientation").equals("")) {
+        if (!tinyDB.getString("orientation").isEmpty()) {
 
             if (tinyDB.getString("orientation").equals("landscape")) {
 
@@ -343,7 +343,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        if (!tinyDB.getString("rotation").equals("")) {
+        if (!tinyDB.getString("rotation").isEmpty()) {
 
             rotationLock = tinyDB.getString("rotation");
 
@@ -410,7 +410,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         mClientWebView.restoreState(savedInstanceState);
         sClientWebView.saveState(savedInstanceState);
