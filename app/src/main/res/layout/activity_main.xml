@@ -35,9 +35,10 @@
         android:layout_marginLeft="5dp"
         android:layout_marginTop="5dp"
         android:layout_marginRight="5dp"
-        android:src="@drawable/fab_icon"
+        android:backgroundTint="@color/white"
+        android:src="@drawable/change"
         android:visibility="gone"
-        app:fabSize="normal"
+        app:fabSize="mini"
         tools:ignore="ContentDescription" />
 
 </RelativeLayout>

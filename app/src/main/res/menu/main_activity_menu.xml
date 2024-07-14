@@ -4,31 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <item
-        android:title="Client"
-        tools:ignore="HardcodedText">
-
-        <menu>
-
-            <item
-                android:id="@+id/secondClient"
-                android:title="Open Second Client"
-                tools:ignore="HardcodedText" />
-
-            <item
-                android:id="@+id/minimizeSecondClient"
-                android:enabled="false"
-                android:title="Minimize Second Client"
-                tools:ignore="HardcodedText" />
-
-            <item
-                android:id="@+id/minimizeMainClient"
-                android:enabled="false"
-                android:title="Minimize Main Client"
-                tools:ignore="HardcodedText" />
-
-        </menu>
-
-    </item>
+        android:id="@+id/secondClient"
+        android:title="Open Second Client"
+        tools:ignore="HardcodedText" />
 
     <item
         android:title="Reload..."

@@ -46,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        setTitle("FlyffU Android - Main Client");
+
         tinyDB = new TinyDB(this);
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -65,30 +67,21 @@ public class MainActivity extends AppCompatActivity {
 
         floatingActionButton.setOnClickListener(view -> {
 
-            if (sClient.getVisibility() == View.GONE) {
-
-                sClient.setVisibility(View.VISIBLE);
-
-                optionMenu.findItem(R.id.minimizeSecondClient).setTitle("Minimize Second Client");
-
-                optionMenu.findItem(R.id.minimizeSecondClient).setEnabled(true);
-
-                optionMenu.findItem(R.id.minimizeMainClient).setTitle("Minimize Main Client");
-
-                optionMenu.findItem(R.id.minimizeMainClient).setEnabled(true);
-            } else {
+            if (sClient.getVisibility() == View.VISIBLE) {
 
                 sClient.setVisibility(View.GONE);
 
-                optionMenu.findItem(R.id.minimizeSecondClient).setTitle("Maximize Second Client");
-
-                optionMenu.findItem(R.id.minimizeSecondClient).setEnabled(true);
-
-                optionMenu.findItem(R.id.minimizeMainClient).setTitle("Minimize Main Client");
-
-                optionMenu.findItem(R.id.minimizeMainClient).setEnabled(false);
-
                 mClient.setVisibility(View.VISIBLE);
+
+                setTitle("FlyffU Android - Main Client");
+
+            } else if (sClient.getVisibility() == View.GONE) {
+
+                sClient.setVisibility(View.VISIBLE);
+
+                mClient.setVisibility(View.GONE);
+
+                setTitle("FlyffU Android - Second Client");
             }
         });
 
@@ -137,10 +130,6 @@ public class MainActivity extends AppCompatActivity {
 
                     optionMenu.findItem(R.id.secondClient).setTitle("Close Second Client");
 
-                    optionMenu.findItem(R.id.minimizeSecondClient).setEnabled(true);
-
-                    optionMenu.findItem(R.id.minimizeMainClient).setEnabled(true);
-
                     optionMenu.findItem(R.id.reloadSecondClient).setEnabled(true);
 
                     floatingActionButton.setVisibility(View.VISIBLE);
@@ -167,14 +156,6 @@ public class MainActivity extends AppCompatActivity {
 
                         optionMenu.findItem(R.id.secondClient).setTitle("Open Second Client");
 
-                        optionMenu.findItem(R.id.minimizeSecondClient).setTitle("Minimize Second Client");
-
-                        optionMenu.findItem(R.id.minimizeMainClient).setTitle("Minimize Main Client");
-
-                        optionMenu.findItem(R.id.minimizeSecondClient).setEnabled(false);
-
-                        optionMenu.findItem(R.id.minimizeMainClient).setEnabled(false);
-
                         optionMenu.findItem(R.id.reloadSecondClient).setEnabled(false);
 
                         if (mClient.getVisibility() == View.GONE) {
@@ -186,48 +167,12 @@ public class MainActivity extends AppCompatActivity {
 
                         isOpen = false;
 
+                        setTitle("FlyffU Android - Main Client");
+
+                        Toast.makeText(this, "Second Client closed.", Toast.LENGTH_SHORT).show();
+
                         dialog.dismiss();
                     });
-                }
-
-                break;
-
-            case R.id.minimizeSecondClient:
-
-                if (sClient.getVisibility() == View.VISIBLE) {
-
-                    sClient.setVisibility(View.GONE);
-
-                    optionMenu.findItem(R.id.minimizeSecondClient).setTitle("Maximize Second Client");
-
-                    optionMenu.findItem(R.id.minimizeMainClient).setEnabled(false);
-                } else {
-
-                    sClient.setVisibility(View.VISIBLE);
-
-                    optionMenu.findItem(R.id.minimizeSecondClient).setTitle("Minimize Second Client");
-
-                    optionMenu.findItem(R.id.minimizeMainClient).setEnabled(true);
-                }
-
-                break;
-
-            case R.id.minimizeMainClient:
-
-                if (mClient.getVisibility() == View.VISIBLE) {
-
-                    mClient.setVisibility(View.GONE);
-
-                    optionMenu.findItem(R.id.minimizeMainClient).setTitle("Maximize Main Client");
-
-                    optionMenu.findItem(R.id.minimizeSecondClient).setEnabled(false);
-                } else {
-
-                    mClient.setVisibility(View.VISIBLE);
-
-                    optionMenu.findItem(R.id.minimizeMainClient).setTitle("Minimize Main Client");
-
-                    optionMenu.findItem(R.id.minimizeSecondClient).setEnabled(true);
                 }
 
                 break;
@@ -392,15 +337,13 @@ public class MainActivity extends AppCompatActivity {
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
         webSettings.setDomStorageEnabled(true);
-        webSettings.setJavaScriptCanOpenWindowsAutomatically(false);
-        webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+        webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
         webSettings.setUseWideViewPort(true);
         webSettings.setLoadWithOverviewMode(true);
         webSettings.setUserAgentString("FlyffU WebViewClient");
 
         webView.loadUrl(url);
     }
-
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
