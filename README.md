@@ -12,4 +12,4 @@ Download it from this link: [FlyffU Android APK](https://github.com/ils94/FlyffU
 
 # Dual Clienting Demo
 
-Watch the demo video here: [Dual Clienting Demo](https://streamable.com/agx04e)
+Watch the demo video here: ![Dual Clienting Demo](https://streamable.com/0173y4)
