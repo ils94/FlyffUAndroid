@@ -33,9 +33,4 @@
         android:id="@+id/fullScreen"
         android:title="Go Back to Fullscreen"
         tools:ignore="HardcodedText" />
-
-    <item
-        android:id="@+id/rotation"
-        android:title="Rotation Locked"
-        tools:ignore="HardcodedText" />
 </menu>
