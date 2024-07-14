@@ -1,7 +1,3 @@
-Here's a revised version with corrected grammar:
-
----
-
 # FlyffU WebView Client
 
 A lightweight WebViewClient for playing Flyff Universe on Android. It allows you to play with dual clients, smoothly switching between them.
